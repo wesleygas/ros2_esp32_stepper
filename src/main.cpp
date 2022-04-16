@@ -27,20 +27,20 @@ rcl_node_t node;
 
 // As in StepperDemo for Motor 1 on ESP32
 
-#define WIFI_SSID
-#define WIFI_PWD 
+#define WIFI_SSID ""
+#define WIFI_PWD  ""
 
 #define meter_per_sec_to_steps_per_sec 1600.0
 #define rad_per_sec_to_steps_per_sec 800.0
 #define initial_acceleration 800
 
-#define enablePinStepper 12
+#define enablePinStepper 33
 
-#define rdirPinStepper 16
-#define rstepPinStepper 26
+#define rstepPinStepper 27
+#define rdirPinStepper 14
 
-#define ldirPinStepper 27
-#define lstepPinStepper 25
+#define lstepPinStepper 12
+#define ldirPinStepper 13
 
 
 FastAccelStepperEngine engine = FastAccelStepperEngine();
@@ -49,17 +49,19 @@ FastAccelStepper *lstepper = NULL;
 
 int32_t global_acceleration = initial_acceleration;
 
-#define LED_PIN 22
+#define LED_PIN 2
 
 #define RCCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){error_loop();}}
 #define RCSOFTCHECK(fn) { rcl_ret_t temp_rc = fn; if((temp_rc != RCL_RET_OK)){}}
 
 
 void error_loop(){
-  while(1){
+  for (size_t i = 0; i < 100; i++)
+  {
     digitalWrite(LED_PIN, !digitalRead(LED_PIN));
     delay(100);
   }
+  ESP.restart();
 }
 
 void timer_callback(rcl_timer_t * timer, int64_t last_call_time)
@@ -156,8 +158,8 @@ void setup_steppers(){
 
 void setup() {
   //Serial.begin(115200);
-  set_microros_wifi_transports(WIFI_SSID, WIFI_PWD, "192.168.0.11", 8888);
-
+  //set_microros_wifi_transports(WIFI_SSID, WIFI_PWD, "192.168.0.11", 8888);
+  set_microros_transports();
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, HIGH);
 
